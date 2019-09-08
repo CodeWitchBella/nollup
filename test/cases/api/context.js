@@ -392,4 +392,34 @@ describe ('API: Plugin Context', () => {
         });
     });
 
+    describe ('import.meta.ROLLUP', () => {
+        it ('should convert to string', async () => {
+            fs.stub('./src/main.js', () => `
+                import logo from './logo.svg';
+                export default logo;
+            `);
+
+            let bundle = await nollup({
+                input: './src/main.js',
+                plugins: [{
+                    load(id) {
+                        if (id.endsWith('.svg')) {
+                            let id = this.emitFile({
+                                type: 'asset',
+                                name: 'logo.svg',
+                                source: '<svg></svg>'
+                            });
+                            return `export default import.meta.ROLLUP_FILE_URL_${id};`;
+                        }
+                    }
+                }]
+            });
+
+            let { output } = await bundle.generate({ format: 'esm', assetFileNames: 'asset-[name][extname]' });
+            let main = output.find(o => o.fileName === 'main.js');
+            expect(eval(main.code.replace('export default ', ''))).to.equal('asset-logo.svg');
+            fs.reset();
+        });
+    });
+
 });
