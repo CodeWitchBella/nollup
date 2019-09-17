@@ -4,17 +4,33 @@ import Switch from './Switch';
 import './App.css';
 import React from 'react';
 
-let App = () => (
-    <div className="App">
-        <h1>Hello World</h1>
-        <Internal />
-        <Counter />
-        <Switch />
-    </div>
-);
+class ErrorBoundary extends React.Component {
+    constructor() {
+        super()
+        this.state = { hasError: false }
+    }
 
-if (process.env.NODE_ENV === 'development') {
-    App = require('react-hot-loader').hot(module)(App);
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+
+    render() {
+        if (this.state.hasError) return null
+        return this.props.children
+    }
 }
+
+let App = () => (
+    <ErrorBoundary>
+        <div className="App">
+            <h1>Hello World</h1>
+            <Internal />
+            <Counter />
+            <ErrorBoundary>
+                <Switch />
+            </ErrorBoundary>
+        </div>
+    </ErrorBoundary>
+);
 
 export default App;

@@ -1,7 +1,7 @@
 {
     "scripts": {
         "clean": "rm -rf dist",
-        "start": "cross-env NODE_ENV=development node ../../lib/cli.js -c --hot --content-base public --port 9001",
+        "start": "cross-env NODE_ENV=development nodemon -i src ../../lib/cli.js -c --hot --content-base public --port 9001",
         "build": "npm run clean && cross-env NODE_ENV=production rollup -c"
     },
     "dependencies": {
@@ -9,10 +9,13 @@
         "react-dom": "^16.9.0"
     },
     "devDependencies": {
+        "@babel/cli": "^7.6.0",
         "@babel/core": "^7.5.5",
         "@babel/preset-react": "^7.0.0",
         "cross-env": "^5.2.0",
+        "nodemon": "^1.19.2",
         "react-hot-loader": "^4.12.11",
+        "react-refresh": "^0.4.2",
         "rollup": "^1.20.1",
         "rollup-plugin-babel": "^4.3.3",
         "rollup-plugin-commonjs-alternate": "0.0.6",
